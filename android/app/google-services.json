@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "521622384810",
+    "project_id": "insurance-portal-a5b39",
+    "storage_bucket": "insurance-portal-a5b39.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:521622384810:android:21b28544427fcf77e2a0d3",
+        "android_client_info": {
+          "package_name": "com.schoolproject.hilleninsure"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "521622384810-3717q8pr6t9bdbge1ut4co556lf9dlvj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.schoolproject.hilleninsure",
+            "certificate_hash": "8a96f848c60a2f61e52a476cca2f1a54fb548a8c"
+          }
+        },
+        {
+          "client_id": "521622384810-039kq9fnus691qnu7kvgohl7n6krbua3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBr0h-sjv8XOxbp4fS3VsrzOWoqd_2kW4w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "521622384810-039kq9fnus691qnu7kvgohl7n6krbua3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
