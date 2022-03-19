@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttericon/entypo_icons.dart';
+import 'package:hilleninsure/provider/my_cars_provider.dart';
 import 'package:hilleninsure/routes/insure_car.dart';
 import 'package:hilleninsure/routes/insure_life.dart';
 import 'package:hilleninsure/routes/insure_travel.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,6 +18,8 @@ class _HomePageState extends State<HomePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
+    final carsProvider = Provider.of<MyCarsProvider>(context);
+    carsProvider.fetchMyCars();
     return Scaffold(
         appBar: AppBar(
           title: Text("Homepage"),

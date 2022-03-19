@@ -17,6 +17,7 @@ class _MyCarsState extends State<MyCars> {
   Widget build(BuildContext context) {
     GlobalMethods globalMethods = GlobalMethods();
     final carsProvider = Provider.of<MyCarsProvider>(context);
+    carsProvider.fetchMyCars();
     return carsProvider.getCars.isEmpty
         ? Scaffold(
             appBar: AppBar(
@@ -33,7 +34,7 @@ class _MyCarsState extends State<MyCars> {
                 itemCount: carsProvider.getCars.length,
                 itemBuilder: (BuildContext ctx, int index) {
                   return ChangeNotifierProvider.value(
-                      value: carsProvider.cars[index],
+                      value: carsProvider.getCars[index],
                       child: ShowCars(
                         carId: carsProvider.getCars.toString()[index],
                       ));
