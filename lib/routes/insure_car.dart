@@ -1,9 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hilleninsure/constants/colors.dart';
-import 'package:hilleninsure/models/vehicle_underwriters_attributes.dart';
-import 'package:hilleninsure/widgets/form_complete.dart';
-import 'package:provider/provider.dart';
+import 'package:hilleninsure/services/global_methods.dart';
+import 'package:uuid/uuid.dart';
 
 class VehicleInsuranceForm extends StatefulWidget {
   static const routeName = "/VehicleInsuranceForm";
@@ -15,369 +16,368 @@ class VehicleInsuranceForm extends StatefulWidget {
 class _VehicleInsuranceFormState extends State<VehicleInsuranceForm> {
   int currentStep = 0;
   bool isCompleted = false;
+  GlobalMethods _globalMethods = GlobalMethods();
   final _formKey = GlobalKey<FormState>();
+  final FocusNode _modelFocusNode = FocusNode();
+  final FocusNode _yearofManufactureFocusNode = FocusNode();
+  final FocusNode _registrationNumberFocusNode = FocusNode();
+  final FocusNode _estimatedValueFocusNode = FocusNode();
   var _vehicleMake = '';
   var _vehicleModel = '';
   var _yearofManufacture = '';
   var _registrationNumber = '';
-  int? _estimatedValue;
+  var _insurer = 'Not selected';
+  var _paymentStatus = 'Not paid';
+  var _premium = '0.00';
+  String? _estimatedValue;
   String? _selectedCoverage;
-  bool? _selectedScope;
+  String? _selectedScope;
+  DateTime _requestedAt = DateTime.now();
+  // DateTime _expiryDate = _expiryDate.difference(_requestedAt);
   bool? value = true;
+  bool _isLoading = false;
+  var uuid = Uuid();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  void _trySubmit() {
+  void dispose() {
+    _modelFocusNode.dispose();
+    _yearofManufactureFocusNode.dispose();
+    _registrationNumberFocusNode.dispose();
+    _estimatedValueFocusNode.dispose();
+    super.dispose();
+  }
+  void _submitForm() async {
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
-
     if (isValid) {
       _formKey.currentState!.save();
-      print(_vehicleMake);
-      print(_vehicleModel);
-      print(_yearofManufacture);
-      print(_registrationNumber);
-      print(_estimatedValue);
-      // Use those values to send our auth request ...
+      try {
+        if (_vehicleMake == null) {
+          _globalMethods.authErrorHandle('Please enter make', context);
+        } else {
+          setState(() {
+            _isLoading = true;
+          });
+
+          final User? user = _auth.currentUser;
+          final _uid = user!.uid;
+          final vehicleId = uuid.v4();
+          await FirebaseFirestore.instance
+              .collection('InsuredVehicles')
+              .doc(vehicleId)
+              .set({
+            'vehicleId': vehicleId,
+            'vehicleMake': _vehicleMake,
+            'vehicleModel': _vehicleModel,
+            'registrationNumber': _registrationNumber,
+            'yearofManufacture': _yearofManufacture,
+            'insurer': _insurer,
+            'paymentStatus': _paymentStatus,
+            'estimatedValue': _estimatedValue,
+            'selectedScope': _selectedScope,
+            'vehiclePremium': _premium,
+            'userId': _uid,
+            'requestMade': _requestedAt,
+            // 'expiryDate':
+          });
+          Navigator.canPop(context) ? Navigator.pop(context) : null;
+        }
+      } catch (error) {
+        // _globalMethods.authErrorHandle(error.message, context);
+        print('An Error Occurred ${error}');
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
-
   @override
   Widget build(BuildContext context) {
-    final vehicleinsurer = Provider.of<VehicleInsurer>(context);
-    List<Step> getSteps() =>
-        [
-          Step(
-              state: currentStep > 0 ? StepState.complete : StepState.indexed,
-              isActive: currentStep >= 0,
-              title: Text("Vehicle Details"),
-              content: Container(
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          alignment: Alignment.bottomLeft,
-                          width: 150,
-                          child: TextFormField(
-                            textInputAction: TextInputAction.next,
-                            key: ValueKey('Make'),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter a Make';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {
-                              _vehicleMake = value!;
-                            },
-                            decoration: InputDecoration(
-                                labelText: "Make",
-                                hintText: "Toyota",
-                                border: UnderlineInputBorder()),
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Container(
-                          alignment: Alignment.bottomLeft,
-                          width: 150,
-                          child: TextFormField(
-                            textInputAction: TextInputAction.next,
-                            key: ValueKey('Model'),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter a Model';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {
-                              _vehicleModel = value!;
-                            },
-                            decoration: InputDecoration(
-                                labelText: "Model",
-                                hintText: "Land cruiser V8",
-                                border: UnderlineInputBorder()),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          alignment: Alignment.bottomLeft,
-                          width: 150,
-                          child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            textInputAction: TextInputAction.next,
-                            key: ValueKey('Year of manufacture'),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Vehicle has to be manufactured';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {
-                              _yearofManufacture = value!;
-                            },
-                            decoration: InputDecoration(
-                                labelText: "Year of manufacture",
-                                hintText: "2015",
-                                border: UnderlineInputBorder()),
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Container(
-                          alignment: Alignment.bottomLeft,
-                          width: 150,
-                          child: TextFormField(
-                            textInputAction: TextInputAction.next,
-                            key: ValueKey('Registration Number'),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Enter registration number';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {
-                              _registrationNumber = value!;
-                            },
-                            decoration: InputDecoration(
-                                labelText: "Registration number",
-                                hintText: "KAO 001A",
-                                border: UnderlineInputBorder()),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          alignment: Alignment.bottomLeft,
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width * .75,
-                          child: TextFormField(
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.number,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Estimated value is missed';
-                              }
-                              return null;
-                            },
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9]')),
-                            ],
-                            decoration: InputDecoration(
-                                labelText: "Estimated value",
-                                hintText: "1000000",
-                                border: UnderlineInputBorder()
-                            ),
-                            onSaved: (value) {
-                              _estimatedValue = value! as int;
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          DropdownButton<String>(
-                            items: [
-                              DropdownMenuItem<String>(
-                                child: Text('Private'),
-                                value: 'Private',
-                              ),
-                              DropdownMenuItem<String>(
-                                child: Text('PSV'),
-                                value: 'PSV',
-                              ),
-                              DropdownMenuItem<String>(
-                                child: Text('TSV'),
-                                value: 'TSV',
-                              ),
-                              DropdownMenuItem<String>(
-                                child: Text('Motorcycle'),
-                                value: 'Motorcycle',
-                              ),
-                            ],
-                            onChanged: (String? value) {
-                              setState(() {
-                                _selectedCoverage = value;
-                                //_controller.text= _productCategory;
-                                print(_selectedCoverage);
-                              });
-                            },
-                            hint: Text('Comprehensive?'),
-                            value: _selectedCoverage,
-                          ),
-                          SizedBox(width: 5,),
-                          DropdownButton<bool>(
-                            items: [
-                              DropdownMenuItem<bool>(
-                                child: Text('Yes'),
-                                value: true,
-                              ),
-                              DropdownMenuItem<bool>(
-                                child: Text('No'),
-                                value: false,
-                              ),
-                            ],
-                            onChanged: (bool? value) {
-                              setState(() {
-                                _selectedScope = value!;
-                                //_controller.text= _productCategory;
-                                print(_selectedScope);
-                              });
-                            },
-                            hint: Text('Select Scope'),
-                            value: _selectedScope,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              )),
-          Step(
-            state: currentStep > 1 ? StepState.complete : StepState.indexed,
-            isActive: currentStep >= 1,
-            title: Text("Underwriters"),
-            content: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                onTap: () {},/*=> Navigator.pushNamed(context, ProductDetails.routeName,
-                    arguments: productsAttributes.id),*/
-                child: Container(
-                  width: 250,
-                  height: 290,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6),
-                      color: Theme.of(context).backgroundColor),
-                  child: Column(
-                    children: [
-                      Column(
-                        children: [
-                          Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(2),
-                                child: Container(
-                                  width: double.infinity,
-                                  constraints: BoxConstraints(
-                                      minHeight: 100,
-                                      maxHeight:
-                                      MediaQuery.of(context).size.height * 0.3),
-                                  child: Image.network(
-                                    vehicleinsurer.imageUrl,
-                                    //   fit: BoxFit.fitWidth,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(left: 5),
-                        margin: EdgeInsets.only(left: 5, bottom: 2, right: 3),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 4,
-                            ),
-                            Text(
-                              vehicleinsurer.name,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0),
-                              child: Text(
-                                'KES. ${_selectedScope! ? _estimatedValue! * vehicleinsurer.comprehensive_rate : vehicleinsurer.third_party_rate }',
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w900),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
+    return Scaffold(
+      bottomSheet: Container(
+        height: kBottomNavigationBarHeight * 0.8,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: ColorsConsts.white,
+          border: Border(
+            top: BorderSide(
+              color: Colors.grey,
+              width: 0.5,
             ),
           ),
-          Step(
-              state: currentStep > 2 ? StepState.complete : StepState.indexed,
-              isActive: currentStep >= 2,
-              title: Text("Extra features"),
-              content: Container(child: Text("Second step"))),
-          Step(
-              state: currentStep > 3 ? StepState.complete : StepState.indexed,
-              isActive: currentStep >= 3,
-              title: Text("Extra question"),
-              content: Container(
-                child: Text("Step 3"),
-              )),
-          Step(
-              state: currentStep > 4 ? StepState.complete : StepState.indexed,
-              isActive: currentStep >= 4,
-              title: Text("Complete"),
-              content: Container(
-                child: Text("Confirm information"),
-              )),
-          Step(
-              isActive: currentStep >= 5,
-              title: Text("Pay"),
-              content: Container()),
-        ];
-    return Scaffold(
+        ),
+        child: Material(
+          color: Theme.of(context).backgroundColor,
+          child: InkWell(
+            onTap: _submitForm,
+            splashColor: Colors.grey,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 2),
+                  child: Text('Submit',
+                      style: TextStyle(fontSize: 16),
+                      textAlign: TextAlign.center),
+                ),
+                GradientIcon(
+                  Icons.file_upload_outlined,
+                  20,
+                  LinearGradient(
+                    colors: <Color>[
+                      Colors.green,
+                      Colors.yellow,
+                      Colors.deepOrange,
+                      Colors.orange,
+                      // Colors.yellow[800],
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
       appBar: AppBar(
         centerTitle: true,
         title: Text("Insure vehicle"),
       ),
-      body: isCompleted
-          ? CompletedForm()
-          : Theme(
-        data: Theme.of(context).copyWith(
-            colorScheme:
-            ColorScheme.light(primary: ColorsConsts.stepperColor)),
-        child: Stepper(
-          // type: StepperType.horizontal,
-          steps: getSteps(),
-          currentStep: currentStep,
-          onStepContinue: () {
-            final isLastStep = currentStep == getSteps().length - 1;
-            if (isLastStep) {
-              setState(() {
-                isCompleted = true;
-              });
-              print('Completed');
-              // Send data to server
-            } else {
-              setState(() => currentStep += 1);
-            }
-          },
-          onStepCancel: currentStep == 0
-              ? null
-              : () => setState(() => currentStep -= 1),
-          /*controlsBuilder: (context, {onStepContinue, onStepCancel}) {
+      body: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: TextFormField(
+                key: ValueKey('Vehcile Make'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Make cannot be null';
+                  }
+                  return null;
+                },
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () =>
+                    FocusScope.of(context).requestFocus(_modelFocusNode),
+                decoration: InputDecoration(
+                  border: const UnderlineInputBorder(),
+                  filled: true,
+                  prefixIcon: Icon(Icons.label_outlined),
+                  labelText: 'Vehicle Make',
+                ),
+                onSaved: (value) {
+                  _vehicleMake = value!;
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: TextFormField(
+                key: ValueKey('Vehicle Model'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Enter model';
+                  }
+                  return null;
+                },
+                focusNode: _modelFocusNode,
+                textInputAction: TextInputAction.next,
+                keyboardType: TextInputType.text,
+                onEditingComplete: () =>
+                    FocusScope.of(context).requestFocus(_yearofManufactureFocusNode),
+                decoration: InputDecoration(
+                    border: const UnderlineInputBorder(),
+                    filled: true,
+                    prefixIcon: Icon(Icons.percent_outlined),
+                    labelText: 'Vehicle Model',
+                    fillColor: Theme.of(context).backgroundColor),
+                onSaved: (value) {
+                  _vehicleModel = value!;
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: TextFormField(
+                key: ValueKey('Year of manufacture'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Enter year of manufacture';
+                  }
+                  return null;
+                },
+                focusNode: _yearofManufactureFocusNode,
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context)
+                    .requestFocus(_registrationNumberFocusNode),
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                    border: const UnderlineInputBorder(),
+                    filled: true,
+                    prefixIcon: Icon(Icons.attach_money_outlined),
+                    labelText: 'Year of manufacture',
+                    fillColor: Theme.of(context).backgroundColor),
+                onSaved: (value) {
+                  _yearofManufacture = value!;
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: TextFormField(
+                key: ValueKey('Registration number'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Enter registration number';
+                  }
+                  return null;
+                },
+                focusNode: _registrationNumberFocusNode,
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () =>
+                    FocusScope.of(context).requestFocus(_estimatedValueFocusNode),
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                  hintText: 'KAU 026B',
+                    border: const UnderlineInputBorder(),
+                    filled: true,
+                    prefixIcon: Icon(Icons.attach_money_outlined),
+                    labelText: 'Registration number',
+                    fillColor: Theme.of(context).backgroundColor),
+                onSaved: (value) {
+                  _registrationNumber = value!;
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: TextFormField(
+                key: ValueKey('Estimated value'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Enter estimated value';
+                  }
+                  return null;
+                },
+                focusNode: _estimatedValueFocusNode,
+                textInputAction: TextInputAction.next,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                    border: const UnderlineInputBorder(),
+                    filled: true,
+                    prefixIcon: Icon(Icons.attach_money_outlined),
+                    labelText: 'Estimated value',
+                    fillColor: Theme.of(context).backgroundColor),
+                onSaved: (value) {
+                  _estimatedValue = value!;
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                children: [
+                  DropdownButton<String>(
+                    items: const [
+                      DropdownMenuItem<String>(
+                        child: Text('Private'),
+                        value: 'Private',
+                      ),
+                      DropdownMenuItem<String>(
+                        child: Text('PSV'),
+                        value: 'PSV',
+                      ),
+                      DropdownMenuItem<String>(
+                        child: Text('TSV'),
+                        value: 'TSV',
+                      ),
+                      DropdownMenuItem<String>(
+                        child: Text('Motorcycle'),
+                        value: 'Motorcycle',
+                      ),
+                    ],
+                    onChanged: (String? value) {
+                      setState(() {
+                        _selectedCoverage = value;
+                        //_controller.text= _productCategory;
+                        print(_selectedCoverage);
+                      });
+                    },
+                    hint: Text('Select Coverage'),
+                    value: _selectedCoverage,
+                  ),
+                  SizedBox(width: 70),
+                  DropdownButton<String>(
+                    items: [
+                      DropdownMenuItem<String>(
+                        child: Text('Comprehensive'),
+                        value: 'Comprehensive',
+                      ),
+                      DropdownMenuItem<String>(
+                        child: Text('Third party'),
+                        value: 'Third party',
+                      ),
+                    ],
+                    onChanged: (String? value) {
+                      setState(() {
+                        _selectedScope = value!;
+                        //_controller.text= _productCategory;
+                        print(_selectedScope);
+                      });
+                    },
+                    hint: Text('Select Scope'),
+                    value: _selectedScope,
+                  ),
+                ],
+              ),
+            ),
+            // SizedBox(height: 20,),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 20, 40, 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  /*Text("Forgot password?", style: TextStyle(
+                            color: Colors.orangeAccent[700],
+                          ),),*/
+                ],
+              ),
+            ),
+            // SizedBox(height: 20,),
+          ],
+        ),
+
+        /*isCompleted
+            ? CompletedForm()
+            : Theme(
+          data: Theme.of(context).copyWith(
+              colorScheme:
+              ColorScheme.light(primary: ColorsConsts.stepperColor)),
+          child: Stepper(
+            // type: StepperType.horizontal,
+            steps: getSteps(),
+            currentStep: currentStep,
+            onStepContinue: () {
+              final isLastStep = currentStep == getSteps().length - 1;
+              if (isLastStep) {
+                setState(() {
+                  isCompleted = true;
+                });
+                print('Completed');
+                _submitForm;// Send data to server
+              } else {
+                setState(() => currentStep += 1);
+              }
+            },
+            onStepCancel: currentStep == 0
+                ? null
+                : () => setState(() => currentStep -= 1),
+            */ /*controlsBuilder: (context, {onStepContinue, onStepCancel}) {
                   return Container(
                     margin: EdgeInsets.only(top: 50),
                     child: Row(
@@ -401,10 +401,42 @@ class _VehicleInsuranceFormState extends State<VehicleInsuranceForm> {
                       ],
                     ),
                   );
-                },*/
-          onStepTapped: (step) => setState(() => currentStep = step),
+                },*/ /*
+            onStepTapped: (step) => setState(() => currentStep = step),
+          ),
+        ),*/
+      ),
+    );
+  }
+}
+
+class GradientIcon extends StatelessWidget {
+  GradientIcon(
+    this.icon,
+    this.size,
+    this.gradient,
+  );
+
+  final IconData icon;
+  final double size;
+  final Gradient gradient;
+
+  @override
+  Widget build(BuildContext context) {
+    return ShaderMask(
+      child: SizedBox(
+        width: size * 1.2,
+        height: size * 1.2,
+        child: Icon(
+          icon,
+          size: size,
+          color: Colors.white,
         ),
       ),
+      shaderCallback: (Rect bounds) {
+        final Rect rect = Rect.fromLTRB(0, 0, size, size);
+        return gradient.createShader(rect);
+      },
     );
   }
 }
