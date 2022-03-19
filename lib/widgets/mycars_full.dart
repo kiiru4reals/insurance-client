@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hilleninsure/models/my_cars_attributes.dart';
+import 'package:hilleninsure/routes/details/car_details.dart';
 import 'package:provider/provider.dart';
 
 class ShowCars extends StatefulWidget {
@@ -25,7 +26,8 @@ class _ShowCarsState extends State<ShowCars> {
             borderRadius: BorderRadius.circular(5.0),
             elevation: 3.0,
             child: InkWell(
-              onTap: () {},
+              onTap: () => Navigator.pushNamed(context, VehicleDetails.routeName,
+                  arguments: CarAttr.vehicleId),
               child: Container(
                 padding: EdgeInsets.all(16.0),
                 child: Row(
