@@ -70,9 +70,6 @@ class _MyAppState extends State<MyApp> {
                   return themeChangeProvider;
                 }),
                 ChangeNotifierProvider(
-                  create: (_) => VehicleInsurerProvider(),
-                ),
-                ChangeNotifierProvider(
                   create: (_) => MyCarsProvider(),
                 ),
                 ChangeNotifierProvider(
@@ -81,6 +78,9 @@ class _MyAppState extends State<MyApp> {
                 ChangeNotifierProvider(
                   create: (_) => TravelInsuranceProvider(),
                 ),
+                ChangeNotifierProvider(
+                  create: (_) => VehicleInsurerProvider(),
+                ),
               ],
               child: Consumer<DarkThemeProvider>(
                   builder: (context, themeData, child) {
@@ -88,7 +88,7 @@ class _MyAppState extends State<MyApp> {
                       title: 'Hilleninsure Client',
                       theme:
                       Styles.themeData(themeChangeProvider.darkTheme, context),
-                      home: VehicleInsuranceForm(),
+                      home: UserState(),
                       //initialRoute: '/',
                       routes: {
                         //   '/': (ctx) => LandingPage(),
