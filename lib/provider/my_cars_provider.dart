@@ -32,4 +32,8 @@ class MyCarsProvider with ChangeNotifier {
       });
     });
   }
+  Car findById(String vehiclesId) {
+    return _mycars.firstWhere((element) => element.vehicleId == vehiclesId);
+  }
+
 }
