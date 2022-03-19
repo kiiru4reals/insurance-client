@@ -30,13 +30,13 @@ class _ShowCarsState extends State<ShowCars> {
                 padding: EdgeInsets.all(16.0),
                 child: Row(
                   children: <Widget>[
-                    Container(
+/*                    Container(
                       height: 80,
                       child: Image.network(CarAttr.certificateUrl),
                     ),
                     SizedBox(
                       width: 10.0,
-                    ),
+                    ),*/
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +50,7 @@ class _ShowCarsState extends State<ShowCars> {
                             height: 20.0,
                           ),
                           Text(
-                            CarAttr.expiry_date,
+                            CarAttr.paymentStatus,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 18.0),
                           ),
