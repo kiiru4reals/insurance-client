@@ -25,6 +25,7 @@ class MyCarsProvider with ChangeNotifier {
             premium: double.parse(
               element.get('vehiclePremium'),
             ),
+            insurer: element.get('insurer'),
             valid_date: DateTime.parse(element.get('requestMade')),
             paymentStatus: element.get('paymentStatus'),
           ),
