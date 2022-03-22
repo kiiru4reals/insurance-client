@@ -2,6 +2,7 @@ import 'package:hilleninsure/constants/theme_data.dart';
 import 'package:hilleninsure/provider/dark_theme_provider.dart';
 import 'package:hilleninsure/provider/life_insurance_provider.dart';
 import 'package:hilleninsure/provider/my_cars_provider.dart';
+import 'package:hilleninsure/provider/my_life_covers_provider.dart';
 import 'package:hilleninsure/provider/travel_insurance_provider.dart';
 import 'package:hilleninsure/provider/vehicle_insurer_provider.dart';
 import 'package:hilleninsure/routes/details/car_details.dart';
@@ -74,13 +75,16 @@ class _MyAppState extends State<MyApp> {
                   create: (_) => MyCarsProvider(),
                 ),
                 ChangeNotifierProvider(
-                  create: (_) => LifeInsuranceProvider(),
+                  create: (_) => LifePackageProvider(),
                 ),
                 ChangeNotifierProvider(
                   create: (_) => TravelInsuranceProvider(),
                 ),
                 ChangeNotifierProvider(
                   create: (_) => VehicleInsurerProvider(),
+                ),
+                ChangeNotifierProvider(
+                  create: (_) => MyLifePackagesProvider(),
                 ),
               ],
               child: Consumer<DarkThemeProvider>(
