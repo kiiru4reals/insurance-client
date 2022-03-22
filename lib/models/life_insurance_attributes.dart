@@ -1,18 +1,20 @@
 import 'package:flutter/cupertino.dart';
 
-class Life with ChangeNotifier {
-  final String id;
-  final String full_name;
-  final double premium;
-  final String valid_date;
-  final String expiry_date;
-  final String underwriter;
+class LifePackage with ChangeNotifier {
+  final String lifeInsuranceId;
+  final String age_limits;
+  final int max_benefits;
+  final String medical_examination;
+  final String package_name;
+  final String parental_inclusion;
+  final int premium;
 
-  Life(
-      {required this.id,
-        required this.full_name,
-        required this.premium,
-        required this.valid_date,
-        required this.expiry_date,
-        required this.underwriter});
+  LifePackage(
+      {required this.lifeInsuranceId,
+      required this.age_limits,
+      required this.max_benefits,
+      required this.medical_examination,
+      required this.package_name,
+      required this.parental_inclusion,
+      required this.premium});
 }
