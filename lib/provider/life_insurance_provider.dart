@@ -1,46 +1,39 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hilleninsure/models/life_insurance_attributes.dart';
 import 'package:flutter/cupertino.dart';
 
-class LifeInsuranceProvider with ChangeNotifier {
+class LifePackageProvider with ChangeNotifier {
+  List<LifePackage> _mylifepackages = [];
 
-  List<Life> get getCovers {
-    return _myCovers;
-  }
-  List<Life> _myCovers = [
-    Life(
-      id: 'Lifeinsurance1',
-      full_name: 'Kiiru Maina',
-      valid_date: '20/12/2021',
-      expiry_date: '20/12/2022',
-      premium: 65000.00,
-      underwriter:
-      'Some company',
-    ),
-    Life(
-      id: 'Lifeinsurance2',
-      full_name: 'Kiiru Maina',
-      valid_date: '20/12/2021',
-      expiry_date: '20/12/2022',
-      premium: 65000.00,
-      underwriter:
-      'Some company',
-    ),
-    Life(
-      id: 'LifeInsurance3',
-      full_name: 'Kiiru Maina',
-      valid_date: '20/12/2021',
-      expiry_date: '20/12/2022',
-      premium: 65000.00,
-      underwriter:
-      'Some company',
-    ),
-  ];
-
-  List<Life> get life {
-    return _myCovers;
+  List<LifePackage> get getlifePackages {
+    return [..._mylifepackages];
   }
 
-  Life findById(String lifeinsuranceId) {
-    return _myCovers.firstWhere((element) => element.id == lifeinsuranceId);
+  Future<void> fetchLifePackages() async {
+    // print('Fetch method is called');
+    await FirebaseFirestore.instance
+        .collection('lifeInsurers')
+        .get()
+        .then((QuerySnapshot lifeInsurersSnapshot) {
+      _mylifepackages = [];
+      lifeInsurersSnapshot.docs.forEach((element) {
+        _mylifepackages.insert(
+          0,
+          LifePackage(
+            lifeInsuranceId: element.get('lifeinsurerId'),
+            age_limits: element.get('ageLimits'),
+            max_benefits: int.parse(element.get('maxBenefits')),
+            medical_examination: element.get('medicalExamination'),
+            package_name: element.get('packageName'),
+            parental_inclusion: element.get('parentInclusion'),
+            premium: int.parse(element.get('premium')),
+          ),
+        );
+      });
+    });
   }
+  LifePackage findById(String lifeId) {
+    return _mylifepackages.firstWhere((element) => element.lifeInsuranceId == lifeId);
+  }
+
 }

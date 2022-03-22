@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttericon/entypo_icons.dart';
+import 'package:hilleninsure/provider/life_insurance_provider.dart';
 import 'package:hilleninsure/provider/my_cars_provider.dart';
 import 'package:hilleninsure/routes/insure_car.dart';
 import 'package:hilleninsure/routes/insure_life.dart';
@@ -20,6 +20,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final carsProvider = Provider.of<MyCarsProvider>(context);
     carsProvider.fetchMyCars();
+    final lifeProvider = Provider.of<LifePackageProvider>(context);
+    lifeProvider.fetchLifePackages();
     return Scaffold(
         appBar: AppBar(
           title: Text("Homepage"),
