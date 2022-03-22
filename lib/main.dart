@@ -4,6 +4,7 @@ import 'package:hilleninsure/provider/life_insurance_provider.dart';
 import 'package:hilleninsure/provider/my_cars_provider.dart';
 import 'package:hilleninsure/provider/travel_insurance_provider.dart';
 import 'package:hilleninsure/provider/vehicle_insurer_provider.dart';
+import 'package:hilleninsure/routes/details/car_details.dart';
 import 'package:hilleninsure/routes/insure_car.dart';
 import 'package:hilleninsure/routes/insure_life.dart';
 import 'package:hilleninsure/routes/insure_travel.dart';
@@ -70,9 +71,6 @@ class _MyAppState extends State<MyApp> {
                   return themeChangeProvider;
                 }),
                 ChangeNotifierProvider(
-                  create: (_) => VehicleInsurerProvider(),
-                ),
-                ChangeNotifierProvider(
                   create: (_) => MyCarsProvider(),
                 ),
                 ChangeNotifierProvider(
@@ -81,6 +79,9 @@ class _MyAppState extends State<MyApp> {
                 ChangeNotifierProvider(
                   create: (_) => TravelInsuranceProvider(),
                 ),
+                ChangeNotifierProvider(
+                  create: (_) => VehicleInsurerProvider(),
+                ),
               ],
               child: Consumer<DarkThemeProvider>(
                   builder: (context, themeData, child) {
@@ -88,7 +89,7 @@ class _MyAppState extends State<MyApp> {
                       title: 'Hilleninsure Client',
                       theme:
                       Styles.themeData(themeChangeProvider.darkTheme, context),
-                      home: VehicleInsuranceForm(),
+                      home: UserState(),
                       //initialRoute: '/',
                       routes: {
                         //   '/': (ctx) => LandingPage(),
@@ -100,6 +101,7 @@ class _MyAppState extends State<MyApp> {
                         LoginScreen.routeName: (ctx) => LoginScreen(),
                         SignUpScreen.routeName: (ctx) => SignUpScreen(),
                         LifeInsurance.routeName: (ctx) => LifeInsurance(),
+                        VehicleDetails.routeName: (ctx) => VehicleDetails(),
                       },
                     );
                   }));
