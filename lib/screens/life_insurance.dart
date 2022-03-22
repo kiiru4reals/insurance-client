@@ -16,26 +16,27 @@ class _LifeInsuranceState extends State<LifeInsurance> {
   @override
   Widget build(BuildContext context) {
     GlobalMethods globalMethods = GlobalMethods();
-    final lifeProvider = Provider.of<LifeInsuranceProvider>(context);
-    return lifeProvider.getCovers.isEmpty
+    final lifeProvider = Provider.of<LifePackageProvider>(context);
+    lifeProvider.fetchLifePackages();
+    return lifeProvider.getlifePackages.isEmpty
         ? Scaffold(
             appBar: AppBar(
               centerTitle: true,
-              title: Text("Life insurance: 0"),
+              title: Text("No policies"),
             ),
             body: NoLife(),
           )
         : Scaffold(
             appBar: AppBar(
-              title: Text('Life insurance (${lifeProvider.getCovers.length})'),
+              title: Text('Life insurance (${lifeProvider.getlifePackages.length})'),
             ),
             body: ListView.builder(
-                itemCount: lifeProvider.getCovers.length,
+                itemCount: lifeProvider.getlifePackages.length,
                 itemBuilder: (BuildContext ctx, int index) {
                   return ChangeNotifierProvider.value(
-                      value: lifeProvider.life[index],
+                      value: lifeProvider.getlifePackages[index],
                       child: LifeFull(
-                        lifeId: lifeProvider.getCovers.toString()[index],
+                        lifeId: lifeProvider.getlifePackages.toString()[index],
                       ));
                 }),
           );
