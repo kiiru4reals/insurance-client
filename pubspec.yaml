@@ -47,6 +47,7 @@ dependencies:
   firebase_storage: ^10.2.6
   google_sign_in: ^5.2.3
   uuid: ^3.0.6
+  flutterwave: ^1.0.1
 
 
 
