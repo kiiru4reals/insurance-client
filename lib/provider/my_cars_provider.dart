@@ -10,7 +10,7 @@ class MyCarsProvider with ChangeNotifier {
   }
 
   Future<void> fetchMyCars() async {
-    print('Fetch method is called');
+    // print('Fetch method is called');
     await FirebaseFirestore.instance
         .collection('InsuredVehicles')
         .get()
@@ -26,7 +26,7 @@ class MyCarsProvider with ChangeNotifier {
               element.get('vehiclePremium'),
             ),
             insurer: element.get('insurer'),
-            valid_date: DateTime.parse(element.get('requestMade')),
+            // valid_date: DateTime.parse(element.get('requestMade')),
             paymentStatus: element.get('paymentStatus'),
           ),
         );
