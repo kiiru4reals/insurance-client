@@ -13,7 +13,7 @@ class LifeFull extends StatefulWidget {
 class _LifeFullState extends State<LifeFull> {
   @override
   Widget build(BuildContext context) {
-    final lifeAttr = Provider.of<Life>(context);
+    final lifeAttr = Provider.of<LifePackage>(context);
     return Stack(
       children: <Widget>[
         Container(
@@ -34,7 +34,7 @@ class _LifeFullState extends State<LifeFull> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            lifeAttr.full_name,
+                            lifeAttr.package_name,
                             style: TextStyle(
                                 fontSize: 16.0, fontWeight: FontWeight.bold),
                           ),
@@ -42,7 +42,7 @@ class _LifeFullState extends State<LifeFull> {
                             height: 20.0,
                           ),
                           Text(
-                            lifeAttr.expiry_date,
+                            lifeAttr.max_benefits.toString(),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 18.0),
                           ),
