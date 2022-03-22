@@ -43,16 +43,14 @@ class _ShowLifePackagesState extends State<ShowLifePackages> {
         DataCell(Text('KES. ${PackagesAttr.premium}'))
       ]),
       DataRow(cells: [
-        DataCell(Text("Package name")),
-        DataCell(Text(PackagesAttr.package_name))
-      ]),
-      DataRow(cells: [
+        DataCell(Text("Pay now")),
         DataCell(ElevatedButton.icon(
-          icon: Icon(Icons.account_balance_wallet_outlined),
+          label: Text("Pay"),
           onPressed: (){},
-          label: Text("Pay", style: TextStyle(fontSize: 20),),
+          icon: Icon(Icons.account_balance_wallet_outlined),
         ))
       ]),
+
     ]);
   }
 }
