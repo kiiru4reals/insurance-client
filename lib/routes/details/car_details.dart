@@ -171,7 +171,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                     ),
                     userListTile('Car registration', prodAttr.car_registration, 0, context),
                     userListTile('Insurer', prodAttr.insurer, 1, context),
-                    userListTile('Premium', prodAttr.premium.toString(), 2, context),
+                    userListTile('Premium', 'KES. ${prodAttr.premium}', 2, context),
                     // userListTile('Request made', prodAttr.valid_date.toString(), 3, context),
                     userListTile('Payment status', prodAttr.paymentStatus, 4, context),
                     // userListTile('Order', 'history', 3, context),
