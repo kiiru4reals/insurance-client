@@ -1,4 +1,10 @@
+import 'dart:io';
+import 'dart:math';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterwave/core/flutterwave.dart';
+import 'package:flutterwave/models/responses/charge_response.dart';
 import 'package:hilleninsure/constants/colors.dart';
 import 'package:hilleninsure/provider/my_cars_provider.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +19,70 @@ class VehicleDetails extends StatefulWidget {
 class _VehicleDetailsState extends State<VehicleDetails> {
   // late ScrollController _scrollController;
   var top = 0.0;
+  String? _ref;
+
+  void setRef() {
+    Random rand = Random();
+    int number = rand.nextInt(2000);
+
+    if (Platform.isAndroid) {
+      setState(() {
+        _ref = "AndroidRef1789$number";
+      });
+    } else {
+      setState(() {
+        _ref = "IOSRef1789$number";
+      });
+    }
+  }
+
+  void _makePayment(
+      BuildContext context, String username, String email, double amount, String insurer) async {
+    try {
+      Flutterwave flutterwave = Flutterwave.forUIPayment(
+          context: this.context,
+          encryptionKey: "FLWSECK_TEST3dc5465e3215",
+          publicKey: "FLWPUBK_TEST-b6880ed261e22926d4f1a08b64233ff7-X",
+          currency: "KES",
+          amount: "$amount",
+          email: "$email",
+          fullName: "$username",
+          txRef: _ref!,
+          isDebugMode: true,
+          phoneNumber: "0742209350",
+          acceptCardPayment: true,
+          acceptUSSDPayment: false,
+          acceptAccountPayment: false,
+          acceptFrancophoneMobileMoney: false,
+          acceptGhanaPayment: false,
+          acceptMpesaPayment: true,
+          acceptRwandaMoneyPayment: true,
+          acceptUgandaPayment: false,
+          acceptZambiaPayment: false);
+
+      final ChargeResponse response =
+      await flutterwave.initializeForUiPayments();
+      if (response == null) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Transaction incomplete")));
+      } else {
+        ///
+        if (response.status == "success") {
+          print(response.data);
+          print(response.message);
+          _submitData(context, username.trim(), email.trim(), amount, insurer.trim());
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("Transaction successful!")));
+        } else {
+          print(response.message);
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("Transaction failed")));
+        }
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
 
   @override
   /*void initState() {
@@ -24,6 +94,10 @@ class _VehicleDetailsState extends State<VehicleDetails> {
   }*/
 
   Widget build(BuildContext context) {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final User? user = _auth.currentUser;
+    final _useremail = user!.email;
+    final _username = user.displayName;
     final CarData = Provider.of<MyCarsProvider>(context);
     final carId = ModalRoute.of(context)!.settings.arguments as String;
     final prodAttr = CarData.findById(carId);
@@ -44,7 +118,21 @@ class _VehicleDetailsState extends State<VehicleDetails> {
         child: Material(
           color: Theme.of(context).backgroundColor,
           child: InkWell(
-            onTap: (){},
+            onTap: (){
+              final email = _useremail;
+              final amount = prodAttr.premium;
+              final username = _username;
+              final vehicleId = prodAttr.vehicleId;
+              final insurer = prodAttr.insurer;
+              final paymentStatus = prodAttr.paymentStatus;
+              if (insurer.isEmpty || username!.isEmpty || amount == 0.0 || email!.isEmpty) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text("Can't make payment! Call agency")));
+              } else {
+                // Proceed to flutterwave
+                _makePayment(context, username.trim(), email.trim(), amount, insurer.trim());
+              }
+            },
             splashColor: Colors.grey,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -164,7 +252,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                   children: [
                     Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: userTitle('User Information')),
+                        child: userTitle('Vehicle information')),
                     Divider(
                       thickness: 1,
                       color: Colors.grey,
@@ -281,6 +369,8 @@ class _VehicleDetailsState extends State<VehicleDetails> {
       ),
     );
   }
+
+  void _submitData(BuildContext context, String username, String email, double amount, String insurer) {}
 }
 class GradientIcon extends StatelessWidget {
   GradientIcon(
