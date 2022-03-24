@@ -49,14 +49,14 @@ class _ShowLifePackagesState extends State<ShowLifePackages> {
     try {
       Flutterwave flutterwave = Flutterwave.forUIPayment(
           context: this.context,
-          encryptionKey: "c35c7abeff1394181cb91b2b",
-          publicKey: "FLWPUBK-b542339ea47dbb636d6c8faa4b2ae210-X",
+          encryptionKey: "FLWSECK_TEST3dc5465e3215",
+          publicKey: "FLWPUBK_TEST-b6880ed261e22926d4f1a08b64233ff7-X",
           currency: "KES",
           amount: "$amount",
           email: "$email",
           fullName: "$username",
           txRef: _ref!,
-          isDebugMode: false,
+          isDebugMode: true,
           phoneNumber: "254742209350",
           acceptCardPayment: true,
           acceptUSSDPayment: false,
