@@ -14,7 +14,9 @@ Insurance client for acquiring insurance policies for vehicle, life and travel.
 ![image](https://github.com/kiiru4reals/insurance-client/blob/readme/assets/app_screenshots/client_landing.jpg)
 ![image](https://github.com/kiiru4reals/insurance-client/blob/readme/assets/app_screenshots/home_page.jpg)
 ![image](https://github.com/kiiru4reals/insurance-client/blob/readme/assets/app_screenshots/insure_vehicle.jpg)
-![image](https://github.com/kiiru4reals/insurance-client/blob/readme/assets/app_screenshots/insure_vehicle.jpg)
+![image](https://github.com/kiiru4reals/insurance-client/blob/readme/assets/app_screenshots/payment_gateway_1.jpg)
+![image](https://github.com/kiiru4reals/insurance-client/blob/readme/assets/app_screenshots/payment_gateway_2.jpg)
+![image](https://github.com/kiiru4reals/insurance-client/blob/readme/assets/app_screenshots/user_info.jpg)
 
 
 ## Documentation
