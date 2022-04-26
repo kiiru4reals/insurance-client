@@ -6,6 +6,7 @@ import 'package:hilleninsure/provider/my_life_covers_provider.dart';
 import 'package:hilleninsure/provider/travel_insurance_provider.dart';
 import 'package:hilleninsure/provider/vehicle_insurer_provider.dart';
 import 'package:hilleninsure/routes/details/car_details.dart';
+import 'package:hilleninsure/routes/details/travel_insurer_details.dart';
 import 'package:hilleninsure/routes/insure_car.dart';
 import 'package:hilleninsure/routes/insure_life.dart';
 import 'package:hilleninsure/routes/insure_travel.dart';
@@ -78,7 +79,7 @@ class _MyAppState extends State<MyApp> {
                   create: (_) => LifePackageProvider(),
                 ),
                 ChangeNotifierProvider(
-                  create: (_) => TravelInsuranceProvider(),
+                  create: (_) => TravelInsurersProvider(),
                 ),
                 ChangeNotifierProvider(
                   create: (_) => VehicleInsurerProvider(),
@@ -106,6 +107,7 @@ class _MyAppState extends State<MyApp> {
                         SignUpScreen.routeName: (ctx) => SignUpScreen(),
                         LifeInsurance.routeName: (ctx) => LifeInsurance(),
                         VehicleDetails.routeName: (ctx) => VehicleDetails(),
+                        TravelInsurerDetails.routeName: (ctx) => TravelInsurerDetails()
                       },
                     );
                   }));
