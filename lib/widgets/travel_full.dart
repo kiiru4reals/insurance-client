@@ -13,7 +13,7 @@ class TravelFull extends StatefulWidget {
 class _TravelFullState extends State<TravelFull> {
   @override
   Widget build(BuildContext context) {
-    final travelAttr = Provider.of<Travel>(context);
+    final travelAttr = Provider.of<TravelInsurer>(context);
     return Stack(
       children: <Widget>[
         Container(
@@ -34,7 +34,7 @@ class _TravelFullState extends State<TravelFull> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            travelAttr.destination,
+                            travelAttr.packageName,
                             style: TextStyle(
                                 fontSize: 16.0, fontWeight: FontWeight.bold),
                           ),
@@ -42,7 +42,7 @@ class _TravelFullState extends State<TravelFull> {
                             height: 20.0,
                           ),
                           Text(
-                            travelAttr.date_of_departure,
+                            travelAttr.packagePrice.toString(),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 18.0),
                           ),

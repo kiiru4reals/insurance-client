@@ -16,8 +16,8 @@ class _TravelInsuranceState extends State<TravelInsurance> {
   @override
   Widget build(BuildContext context) {
     GlobalMethods globalMethods = GlobalMethods();
-    final travelProvider = Provider.of<TravelInsuranceProvider>(context);
-    return travelProvider.getCovers.isEmpty
+    final travelProvider = Provider.of<TravelInsurersProvider>(context);
+    return travelProvider.gettravelinsurer.isEmpty
         ? Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -27,15 +27,15 @@ class _TravelInsuranceState extends State<TravelInsurance> {
     )
         : Scaffold(
       appBar: AppBar(
-        title: Text('My Cars(${travelProvider.getCovers.length})'),
+        title: Text('My travel insurance policies(${travelProvider.gettravelinsurer.length})'),
       ),
       body: ListView.builder(
-          itemCount: travelProvider.getCovers.length,
+          itemCount: travelProvider.gettravelinsurer.length,
           itemBuilder: (BuildContext ctx, int index) {
             return ChangeNotifierProvider.value(
-                value: travelProvider.travel[index],
+                value: travelProvider.gettravelinsurer[index],
                 child: TravelFull(
-                  travelId: travelProvider.getCovers.toString()[index],
+                  travelId: travelProvider.gettravelinsurer.toString()[index],
                 ));
           }),
     );
