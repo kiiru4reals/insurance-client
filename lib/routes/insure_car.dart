@@ -167,8 +167,9 @@ class _VehicleInsuranceFormState extends State<VehicleInsuranceForm> {
                 decoration: InputDecoration(
                   border: const UnderlineInputBorder(),
                   filled: true,
-                  prefixIcon: Icon(Icons.label_outlined),
+                  prefixIcon: Icon(Icons.directions_car_outlined),
                   labelText: 'Vehicle Make',
+                  hintText: "Toyota",
                 ),
                 onSaved: (value) {
                   _vehicleMake = value!;
@@ -193,8 +194,9 @@ class _VehicleInsuranceFormState extends State<VehicleInsuranceForm> {
                 decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
                     filled: true,
-                    prefixIcon: Icon(Icons.percent_outlined),
+                    prefixIcon: Icon(Icons.model_training_outlined),
                     labelText: 'Vehicle Model',
+                    hintText: 'Land cruiser VX',
                     fillColor: Theme.of(context).backgroundColor),
                 onSaved: (value) {
                   _vehicleModel = value!;
@@ -219,8 +221,9 @@ class _VehicleInsuranceFormState extends State<VehicleInsuranceForm> {
                 decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
                     filled: true,
-                    prefixIcon: Icon(Icons.attach_money_outlined),
+                    prefixIcon: Icon(Icons.event_outlined),
                     labelText: 'Year of manufacture',
+                    hintText: '2015',
                     fillColor: Theme.of(context).backgroundColor),
                 onSaved: (value) {
                   _yearofManufacture = value!;
@@ -246,7 +249,7 @@ class _VehicleInsuranceFormState extends State<VehicleInsuranceForm> {
                   hintText: 'KAU 026B',
                     border: const UnderlineInputBorder(),
                     filled: true,
-                    prefixIcon: Icon(Icons.attach_money_outlined),
+                    prefixIcon: Icon(Icons.app_registration_outlined),
                     labelText: 'Registration number',
                     fillColor: Theme.of(context).backgroundColor),
                 onSaved: (value) {
@@ -272,6 +275,7 @@ class _VehicleInsuranceFormState extends State<VehicleInsuranceForm> {
                     filled: true,
                     prefixIcon: Icon(Icons.attach_money_outlined),
                     labelText: 'Estimated value',
+                    hintText: '80000000',
                     fillColor: Theme.of(context).backgroundColor),
                 onSaved: (value) {
                   _estimatedValue = value!;
