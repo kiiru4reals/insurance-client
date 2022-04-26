@@ -1,47 +1,54 @@
-import 'package:hilleninsure/models/life_insurance_attributes.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:hilleninsure/models/travel_insurance_attributes.dart';
 
-class TravelInsuranceProvider with ChangeNotifier {
+class TravelInsurersProvider with ChangeNotifier {
+  List<TravelInsurer> _travelinsurer = [];
 
-  List<Travel> get getCovers {
-    return _myCovers;
-  }
-  List<Travel> _myCovers = [
-    Travel(
-      id: 'Travelinsurance1',
-      travellers: 'Individual',
-      destination: 'Switzerland',
-      duration: '12',
-      date_of_departure: '20/12/2022',
-      insurer: 'Sanlam',
-      certificateUrl: '',
-    ),
-    Travel(
-      id: 'Travelinsurance1',
-      travellers: 'Individual',
-      destination: 'Switzerland',
-      duration: '12',
-      date_of_departure: '20/12/2022',
-      insurer: 'Sanlam',
-      certificateUrl: '',
-    ),
-    Travel(
-      id: 'Travelinsurance1',
-      travellers: 'Individual',
-      destination: 'Switzerland',
-      duration: '12',
-      date_of_departure: '20/12/2022',
-      insurer: 'Sanlam',
-      certificateUrl: '',
-    ),
-  ];
-
-  List<Travel> get travel {
-    return _myCovers;
+  List<TravelInsurer> get gettravelinsurer {
+    return [..._travelinsurer];
   }
 
-  Travel findById(String travelinsuranceId) {
-    return _myCovers.firstWhere((element) => element.id == travelinsuranceId);
+  Future<void> fetchTravelInsurer() async {
+    // print('Fetch method is called');
+    await FirebaseFirestore.instance
+        .collection('travelInsurers')
+        .get()
+        .then((QuerySnapshot travelInsurerSnapshot) {
+      _travelinsurer = [];
+      travelInsurerSnapshot.docs.forEach((element) {
+        _travelinsurer.insert(
+          0,
+          TravelInsurer(
+            travelinsurerId: element.get('travelinsurerId'),
+            accidentalDeath: element.get('accidentalDeath'),
+            covidInclusion: element.get('covidInclusion'),
+            emergencyHospitalisation: element.get('emergencyHospitalisation'),
+            hijackHostage: element.get('hijackHostage'),
+            hospitalCashBenefit: element.get('hospitalCashBenefits'),
+            journeyCancellation: element.get('journeyCancellation'),
+            journeyCurtailment: element.get('journeyCurtailment'),
+            legalExpenses: element.get('legalExpenses'),
+            lostCash: element.get('lostCash'),
+            luggage: element.get('lostLuggage'),
+            luggageDelay: element.get('luggageDelay'),
+            packageName: element.get('packageName'),
+            packagePrice: int.parse(element.get('packagePrice')),
+            permanentDisability: element.get('personalDisability'),
+            personalLiability: element.get('personalLiability'),
+            preexistingConditions: element.get('preExsistingConditions'),
+            singleItemLimit: element.get('singleItemLimit'),
+            travelDelay: element.get('travelDelay'),
+          ),
+        );
+      });
+    });
+  }
+
+  List<TravelInsurer> get insurer {
+    return _travelinsurer;
+  }
+  TravelInsurer findById(String InsurerId) {
+    return _travelinsurer.firstWhere((element) => element.travelinsurerId == InsurerId);
   }
 }

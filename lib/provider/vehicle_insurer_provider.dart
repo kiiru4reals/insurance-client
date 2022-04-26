@@ -33,7 +33,7 @@ class VehicleInsurerProvider with ChangeNotifier {
     ),
   ];
 
-  List<VehicleInsurer> get cars {
+  List<VehicleInsurer> get insurer {
     return _myinsurers;
   }
 

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hilleninsure/constants/colors.dart';
 import 'package:hilleninsure/provider/life_insurance_provider.dart';
 import 'package:hilleninsure/services/global_methods.dart';
-import 'package:hilleninsure/widgets/form_complete.dart';
 import 'package:hilleninsure/widgets/life_packages.dart';
 import 'package:hilleninsure/widgets/no_life_packages.dart';
 import 'package:provider/provider.dart';

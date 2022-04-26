@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:hilleninsure/models/travel_insurance_attributes.dart';
+import 'package:hilleninsure/routes/details/travel_insurer_details.dart';
 import 'package:provider/provider.dart';
 
-class TravelFull extends StatefulWidget {
-  final String travelId;
-  const TravelFull({required this.travelId});
+class ShowTravelPackages extends StatefulWidget {
+  final String travelinsurerId;
+  const ShowTravelPackages({Key? key, required this.travelinsurerId}) : super(key: key);
 
   @override
-  _TravelFullState createState() => _TravelFullState();
+  _ShowTravelPackagesState createState() => _ShowTravelPackagesState();
 }
 
-class _TravelFullState extends State<TravelFull> {
+class _ShowTravelPackagesState extends State<ShowTravelPackages> {
   @override
   Widget build(BuildContext context) {
     final travelAttr = Provider.of<TravelInsurer>(context);
@@ -24,11 +25,19 @@ class _TravelFullState extends State<TravelFull> {
             borderRadius: BorderRadius.circular(5.0),
             elevation: 3.0,
             child: InkWell(
-              onTap: () {},
+              onTap: () => Navigator.pushNamed(context, TravelInsurerDetails.routeName,
+                  arguments: travelAttr.travelinsurerId),
               child: Container(
                 padding: EdgeInsets.all(16.0),
                 child: Row(
                   children: <Widget>[
+/*                    Container(
+                      height: 80,
+                      child: Image.network(CarAttr.certificateUrl),
+                    ),
+                    SizedBox(
+                      width: 10.0,
+                    ),*/
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
