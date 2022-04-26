@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hilleninsure/provider/life_insurance_provider.dart';
 import 'package:hilleninsure/provider/my_cars_provider.dart';
+import 'package:hilleninsure/provider/travel_insurance_provider.dart';
 import 'package:hilleninsure/routes/insure_car.dart';
 import 'package:hilleninsure/routes/insure_life.dart';
 import 'package:hilleninsure/routes/insure_travel.dart';
@@ -22,6 +23,8 @@ class _HomePageState extends State<HomePage> {
     carsProvider.fetchMyCars();
     final lifeProvider = Provider.of<LifePackageProvider>(context);
     lifeProvider.fetchLifePackages();
+    final travelProvider = Provider.of<TravelInsurersProvider>(context);
+    travelProvider.fetchTravelInsurer();
     return Scaffold(
         appBar: AppBar(
           title: Text("Homepage"),
