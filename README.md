@@ -1,15 +1,25 @@
 # hilleninsure
 
-A new Flutter project.
+Insurance client for acquiring insurance policies for vehicle, life and travel.
 
-## Getting Started
+## Features
+- Self sign up for clients using email, google and anonymous sign in.
+- View insurance policies available.
+- view purchased insurance policies and status of the policies (valid or expired).
+- Payment gateway with flutterwave API.
+- Backend firebase integration.
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+## Screenshots
+![image](https://github.com/kiiru4reals/insurance-client/blob/readme/assets/app_screenshots/client_landing.jpg)
+![image](https://github.com/kiiru4reals/insurance-client/blob/readme/assets/app_screenshots/home_page.jpg)
+![image](https://github.com/kiiru4reals/insurance-client/blob/readme/assets/app_screenshots/insure_vehicle.jpg)
+![image](https://github.com/kiiru4reals/insurance-client/blob/readme/assets/app_screenshots/insure_vehicle.jpg)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+
+## Documentation
+ Full documentation can be found [here](https://drive.google.com/drive/folders/1_7Acc3yVzHy_mFhp4XojnCSIDvI579AM?usp=sharing)
+
 
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
